@@ -1,3 +1,4 @@
+// Copyright (C) 2021 David Bundgaard
 package types
 
 type ActIndex struct {

@@ -1,3 +1,4 @@
+// Copyright (C) 2021 David Bundgaard
 package card
 
 import "testing"

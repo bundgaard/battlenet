@@ -1,3 +1,4 @@
+// Copyright (C) 2021 David Bundgaard
 package d3
 
 import "github.com/bundgaard/battlenet/d3/community/types"
