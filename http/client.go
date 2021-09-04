@@ -38,7 +38,7 @@ type oauthToken struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-func (c credentials) BasicAuth() string {
+func (c credentials) basicAuth() string {
 	return fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", c.ID, c.Secret))))
 }
 
@@ -74,7 +74,7 @@ func (c Client) TokenRequest(method string, body io.Reader, format string, v ...
 
 	req.Header.Set("Authorization", "Bearer "+c.token)
 
-	resp, err := c.Do(req)
+	resp, err := c.do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -88,10 +88,10 @@ func (c *Client) Login() error {
 	formData := url.Values{}
 	formData.Add("grant_type", "client_credentials")
 	req, _ := http.NewRequest("POST", c.oauthURL+"/oauth/token", strings.NewReader(formData.Encode()))
-	req.Header.Set("Authorization", c.credentials.BasicAuth())
+	req.Header.Set("Authorization", c.credentials.basicAuth())
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := c.Do(req)
+	resp, err := c.do(req)
 	if err != nil {
 		return err
 	}
@@ -107,6 +107,6 @@ func (c *Client) Login() error {
 
 }
 
-func (c *Client) Do(req *http.Request) (*http.Response, error) {
+func (c *Client) do(req *http.Request) (*http.Response, error) {
 	return c.httpClient.Do(req)
 }
