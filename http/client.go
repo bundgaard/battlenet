@@ -22,23 +22,23 @@ const (
 type Client struct {
 	httpClient *http.Client
 
-	credentials Credentials
+	credentials credentials
 	token       string
 	apiURL      string
 	oauthURL    string
 }
 
-type Credentials struct {
+type credentials struct {
 	ID, Secret string
 }
 
-type OauthToken struct {
+type oauthToken struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-func (c Credentials) BasicAuth() string {
+func (c credentials) BasicAuth() string {
 	return fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", c.ID, c.Secret))))
 }
 
@@ -52,7 +52,7 @@ func New(clientId, clientSecret, region string) *Client {
 
 	return &Client{
 		httpClient:  http.DefaultClient,
-		credentials: Credentials{ID: clientId, Secret: clientSecret},
+		credentials: credentials{ID: clientId, Secret: clientSecret},
 		apiURL:      apiURL,
 		oauthURL:    oauthURL,
 	}
@@ -98,7 +98,7 @@ func (c *Client) Login() error {
 
 	defer resp.Body.Close()
 	log.Printf("%d %s", resp.StatusCode, resp.Status)
-	var t OauthToken
+	var t oauthToken
 	if err := json.NewDecoder(resp.Body).Decode(&t); err != nil {
 		return err
 	}
@@ -110,5 +110,3 @@ func (c *Client) Login() error {
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	return c.httpClient.Do(req)
 }
-
-
