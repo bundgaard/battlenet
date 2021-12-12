@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -78,8 +79,10 @@ func (c Client) TokenRequest(method string, body io.Reader, format string, v ...
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("request %s %d %s", format, resp.StatusCode, resp.Status)
+		content, _ := ioutil.ReadAll(resp.Body)
+		return nil, fmt.Errorf("request %s %d %s %s", format, resp.StatusCode, resp.Status, content)
 	}
 	return resp, nil
 }
