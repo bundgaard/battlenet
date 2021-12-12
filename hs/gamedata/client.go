@@ -42,7 +42,7 @@ func (c *Client) CardSearch(search *card.SearchRequest) {
 
 	resp, err := c.client.TokenRequest("GET", nil, url)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer resp.Body.Close()
 	http.Todo(resp.Body, "cards%s", search.Encode())
@@ -62,7 +62,7 @@ func (c *Client) CardBackSearch(search *cardback.SearchRequest) (*cardback.Respo
 
 	resp, err := c.client.TokenRequest("GET", nil, url)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer resp.Body.Close()
 
@@ -103,7 +103,7 @@ func (c *Client) DeckByList(list []string) {}
 func (c *Client) Metadata() {
 	resp, err := c.client.TokenRequest("GET", nil, "/hearthstone/metadata/?locale=en_US")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	defer resp.Body.Close()
