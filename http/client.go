@@ -72,19 +72,20 @@ func (c Client) TokenRequest(method string, body io.Reader, format string, v ...
 	if err != nil {
 		return nil, err
 	}
-
 	req.Header.Set("Authorization", "Bearer "+c.token)
-
 	resp, err := c.do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
-		content, _ := ioutil.ReadAll(resp.Body)
-		return nil, fmt.Errorf("request %s %d %s %s", format, resp.StatusCode, resp.Status, content)
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
+		content, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+		return nil, fmt.Errorf("%d %s %s", resp.StatusCode, resp.Status, content)
 	}
-	return resp, nil
+	return resp, _
 }
 
 func (c *Client) Login() error {
