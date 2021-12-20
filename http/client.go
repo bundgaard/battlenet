@@ -85,7 +85,7 @@ func (c Client) TokenRequest(method string, body io.Reader, format string, v ...
 		defer resp.Body.Close()
 		return nil, fmt.Errorf("%d %s %s", resp.StatusCode, resp.Status, content)
 	}
-	return resp, _
+	return resp, nil
 }
 
 func (c *Client) Login() error {
